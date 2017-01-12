@@ -1,23 +1,7 @@
 (function () {
-    /* Simple test
-  var a = 100
-  var b = 20
-  
-  if (a > b) console.log("A is bigger than B!")
-  
-  turns to
-  
-  var 0 = "A is bigger than B!";
-  var 1 = 100
-  var 2 = 20
-  
-  compare (a > b)
-  log 0
-  else
-  
-        */
+
     var MEMORY = [];
-    var CODE = [1233, 0, 65, 32, 105, 115, 32, 98, 105, 103, 103, 101, 114, 32, 116, 104, 97, 110, 32, 66, 33, 0, 1234, 1, 100, 1234, 2, 20, 1241, 1, 1, 2, 34, 1243, 0, 1245];
+    var CODE = [];
 
 
     var COUNTER = 0;
