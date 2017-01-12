@@ -9,6 +9,16 @@ function sprintf(string) {
         return args[index];
     });
 }
+
+function generateVar() {
+    var text = "_";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 var used = [];
 
 var getRandom = function () {
@@ -17,34 +27,49 @@ var getRandom = function () {
     used.push(random);
     return random;
 }
-var MEMORY = "";
-var CODE = "";
-var COUNTER = "";
+var MEMORY = generateVar();
+var CODE = generateVar();
+var COUNTER = generateVar();
 
 // set string
 
-var ssc = getRandom();
-var set_string = sprintf("case %1:%2[%3[%4++]]=decryptString();break;", ssc, MEMORY, CODE, COUNTER);
+var set_string_code = getRandom();
+var set_string = sprintf("case %1:%2[%3[%4++]]=decryptString();break;", set_string_code, MEMORY, CODE, COUNTER);
 
 // set int
 
-var sic = getRandom();
-var set_int = sprintf("case %1:%2[%3[&4++]]=%3[%4++];break;", sic, MEMORY, CODE, COUNTER);
+var set_int_code = getRandom();
+var set_int = sprintf("case %1:%2[%3[&4++]]=%3[%4++];break;", set_int_code, MEMORY, CODE, COUNTER);
 
 // set array
-var sac = getRandom();
-var set_array = sprintf("case %1:%2[%3[&4++]]=[];break;", sic, MEMORY, CODE, COUNTER);
+var set_array_code = getRandom();
+var set_array = sprintf("case %1:%2[%3[&4++]]=[];break;", set_array_code, MEMORY, CODE, COUNTER);
 
 // set object
-var soc = getRandom();
-var set_object = sprintf("case %1:%2[%3[&4++]]={};break;", soc, MEMORY, CODE, COUNTER);
+var set_object_code = getRandom();
+var set_object = sprintf("case %1:%2[%3[&4++]]={};break;", set_object_code, MEMORY, CODE, COUNTER);
 
 // addition
 
-var adc = getRandom();
-var set_object = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]+%2[%3[%4++]];break;", adc, MEMORY, CODE, COUNTER);
+var addition_code = getRandom();
+var addition = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]+%2[%3[%4++]];break;", addition_code, MEMORY, CODE, COUNTER);
 
 // subtraction
+
+var subtraction_code = getRandom();
+var subtraction = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]-%2[%3[%4++]];break;", subtraction_code, MEMORY, CODE, COUNTER);
+
+// multiplication
+var multiplication_code = getRandom();
+var multiplication = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]*%2[%3[%4++]];break;", multiplication_code, MEMORY, CODE, COUNTER);
+
+// division
+var division_code = getRandom();
+var division = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]/%2[%3[%4++]];break;", division_code, MEMORY, CODE, COUNTER);
+
+// compare
+var compare_code = getRandom();
+var compare = sprintf("case %1: var code=%3[%4++],a=MEMORY[CODE[COUNTER++]],b=%2[%3[%4++]],fal=%3[%4++],value=false;switch (code) {case 0: value = a == b;break;case 1: value = a > b; break;case 2: value = a >= b;break;case 3: value = a < b;break;case 4: value = a <= b;break;}if (!value) COUNTER = fal;", compare_code, MEMORY, CODE, COUNTER)
 
 var machine = "(function () {\
 var %1 = [];\
@@ -52,19 +77,6 @@ var %2 = [];\
 var %3 = 0;\
 while (true) {\
     switch (CODE[COUNTER++]) {\
-case 1237: // Addition\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]] + MEMORY[CODE[COUNTER++]];\
-    break;\
-case 1238: // subtraction\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]] - MEMORY[CODE[COUNTER++]];\
-    break;\
-case 1239: // multiplication\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]] * MEMORY[CODE[COUNTER++]];\
-    break;\
-case 1240: // division\
-    var r = MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]] / MEMORY[CODE[COUNTER++]];\
-
-break;\
 case 1241: // compare: \
     var code = CODE[COUNTER++];\
     var a = MEMORY[CODE[COUNTER++]];\
@@ -89,8 +101,8 @@ case 1241: // compare: \
         break;\
     }\
 
-    if (!value) COUNTER = fal;\
-    break;\
+if (!value) COUNTER = fal;\
+break;\
 case 1242: // goto:\
     COUNTER = CODE[COUNTER++];\
     break;\
