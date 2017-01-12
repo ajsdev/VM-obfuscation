@@ -3,11 +3,11 @@
         
         var a = 10
         var b = 20
-       console.log(a/b);
+       console.log("10 / 20 equals:" + a/b);
        
        
        This turns into
-       
+       allocate 0 = "10 / 20 equals:"
        allocate 1 = 10
        allocate 2 = 20
        divide 1 by 2 store in 3
@@ -16,16 +16,17 @@
        end
        
        turns into
-       
+       1233 3 49 48 32 47 32 50 48 32 101 113 117 97 108 115 58 32 0 // allocate string
        1234 0 10 // allocate 0 as 10
        1234 1 20 // allocate 1 as 20
        1240 2 0 1 // divide 0 by 1 store in 2
        1244 2 2 //  inttostring 2 store in 2
-       1243 2 // log 3
+       1246 2 3 2 // concat
+       1243 2 // log 2
        1245 // end
         */
     var MEMORY = [];
-    var CODE = [1234, 0, 10, 1234, 1, 20, 1240, 2, 0, 1, 1244, 2, 2, 1243, 2, 1245];
+    var CODE = [1233, 3, 49, 48, 32, 47, 32, 50, 48, 32, 101, 113, 117, 97, 108, 115, 58, 32, 0, 1234, 0, 10, 1234, 1, 20, 1240, 2, 0, 1, 1244, 2, 2, 1246, 2, 3, 2, 1243, 2, 1245];
 
 
     var COUNTER = 0;
