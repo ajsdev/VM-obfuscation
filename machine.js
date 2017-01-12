@@ -82,6 +82,25 @@
 
             return;
             break;
+        case 1246: // concat string/array
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].concat(MEMORY[CODE[COUNTER++]])
+
+            break;
+        case 1247: // get length
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].length
+            break;
+        case 1248: // slice/substr
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].slice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]])
+            break;
+        case 1249: // push
+            MEMORY[CODE[COUNTER++]].push(MEMORY[CODE[COUNTER++]]);
+            break;
+        case 1250: // splice
+            MEMORY[CODE[COUNTER++]].splice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]]);
+            break;
+        case 1251: // get
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]];
+            break;
         };
 
     }
