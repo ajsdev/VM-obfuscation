@@ -1,32 +1,23 @@
 (function () {
     /* Simple test
-        
-        var a = 10
-        var b = 20
-       console.log("10 / 20 equals:" + a/b);
-       
-       
-       This turns into
-       allocate 0 = "10 / 20 equals:"
-       allocate 1 = 10
-       allocate 2 = 20
-       divide 1 by 2 store in 3
-       inttostring 3 store in 3
-       log 3
-       end
-       
-       turns into
-       1233 3 49 48 32 47 32 50 48 32 101 113 117 97 108 115 58 32 0 // allocate string
-       1234 0 10 // allocate 0 as 10
-       1234 1 20 // allocate 1 as 20
-       1240 2 0 1 // divide 0 by 1 store in 2
-       1244 2 2 //  inttostring 2 store in 2
-       1246 2 3 2 // concat
-       1243 2 // log 2
-       1245 // end
+  var a = 100
+  var b = 20
+  
+  if (a > b) console.log("A is bigger than B!")
+  
+  turns to
+  
+  var 0 = "A is bigger than B!";
+  var 1 = 100
+  var 2 = 20
+  
+  compare (a > b)
+  log 0
+  else
+  
         */
     var MEMORY = [];
-    var CODE = [1233, 3, 49, 48, 32, 47, 32, 50, 48, 32, 101, 113, 117, 97, 108, 115, 58, 32, 0, 1234, 0, 10, 1234, 1, 20, 1240, 2, 0, 1, 1244, 2, 2, 1246, 2, 3, 2, 1243, 2, 1245];
+    var CODE = [1233, 0, 65, 32, 105, 115, 32, 98, 105, 103, 103, 101, 114, 32, 116, 104, 97, 110, 32, 66, 33, 0, 1234, 1, 100, 1234, 2, 20, 1241, 1, 1, 2, 34, 1243, 0, 1245];
 
 
     var COUNTER = 0;
@@ -34,6 +25,7 @@
         switch (CODE[COUNTER++]) { // in reality, these codes would be random
         case 1233: // allocate/set memory STRING
             MEMORY[CODE[COUNTER++]] = decryptString();
+
             break;
 
         case 1234: // allocate memory/set INT
@@ -62,7 +54,31 @@
 
             break;
         case 1241: // compare: 
+            var code = CODE[COUNTER++];
+            var a = MEMORY[CODE[COUNTER++]];
+            var b = MEMORY[CODE[COUNTER++]];
+            var fal = CODE[COUNTER++];
 
+            var value = false;
+            switch (code) {
+            case 0: // equal to
+                value = a == b
+                break;
+            case 1: // bigger than
+                value = a > b
+                break;
+            case 2: // bigger than or equal
+                value = a >= b
+                break;
+            case 3: // smaller than
+                value = a < b
+                break;
+            case 4: // smaller than or equal
+                value = a <= b
+                break;
+            }
+
+            if (!value) COUNTER = fal;
             break;
         case 1242: // goto:
             COUNTER = CODE[COUNTER++];
