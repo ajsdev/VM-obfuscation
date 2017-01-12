@@ -102,6 +102,10 @@
         case 1251: // get
             MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]];
             break;
+        case 1252: // set
+            MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]] = MEMORY[CODE[COUNTER++]];
+            break;
+
         };
 
     }
