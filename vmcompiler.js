@@ -70,7 +70,7 @@ var division = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]/%2[%3[%4++]];break;", 
 
 // compare
 var compare_code = getRandom();
-var compare = sprintf("case %1: var code=%3[%4++],a=MEMORY[CODE[COUNTER++]],b=%2[%3[%4++]],fal=%3[%4++],value=false;switch (code) {case 0: value = a == b;break;case 1: value = a > b; break;case 2: value = a >= b;break;case 3: value = a < b;break;case 4: value = a <= b;break;}if (!value) COUNTER = fal;", compare_code, MEMORY, CODE, COUNTER)
+var compare = sprintf("case %1: var c=%3[%4++],a=%2[%3[%4++]],b=%2[%3[%4++]],fal=%3[%4++],value=false;switch (c) {case 0: value = a == b;break;case 1: value = a > b; break;case 2: value = a >= b;break;case 3: value = a < b;break;case 4: value = a <= b;break;}if (!value) COUNTER = fal;", compare_code, MEMORY, CODE, COUNTER)
 
 // goto
 var goto_code = getRandom();
@@ -78,7 +78,7 @@ var goto = sprintf("case %1: %2=%3[%2++]; break;", goto_code, COUNTER, CODE);
 
 // log
 var log_code = getRandom();
-var goto = sprintf("case %1: console.log(decryptStringComp(%2[%3[%4++]])); break;", log_code, MEMORY, CODE, COUNTER);
+var log = sprintf("case %1: console.log(decryptStringComp(%2[%3[%4++]])); break;", log_code, MEMORY, CODE, COUNTER);
 
 // int to string
 var intstring_code = getRandom();
@@ -90,7 +90,7 @@ var stringint = sprintf("case %1: %2[%3[%4++]]=parseInt(%2[%3[%4++]]);break;", s
 
 // concat
 var concat_code = getRandom()
-var concat = sprintf("case %1: %2[%3[%4++]]=%2[%3[%4++]].concat(%2[%3[%4++]])");
+var concat = sprintf("case %1: %2[%3[%4++]]=%2[%3[%4++]].concat(%2[%3[%4++]])", concat_code, MEMORY, CODE, COUNTER);
 
 // end
 
@@ -101,58 +101,120 @@ var end = sprintf("case %1: stop=true;break;", end_code);
 var out_code = getRandom();
 var out = sprintf("case %1: %2[%4[%5++]]=%3[%4[%5++]];break;", out_code, OUT, MEMORY, CODE, COUNTER);
 
+// shuffle array
 
-/*
-var machine = "(function () {\
-var %1 = [];\
-var %2 = [];\
-var %3 = 0;\
-while (true) {\
-    switch (CODE[COUNTER++]) {\
-case 1247: // get length\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].length\
-    break;\
-case 1248: // slice/substr\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].slice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]])\ break;\
-case 1249: // push\
-    MEMORY[CODE[COUNTER++]].push(MEMORY[CODE[COUNTER++]]);\
-    break;\
-case 1250: // splice\
-    MEMORY[CODE[COUNTER++]].splice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]]);\
-    break;\
-case 1251: // get\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]];\
-    break;\
-case 1252: // set\
-    MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]] = MEMORY[CODE[COUNTER++]];\
-    break;\
+var code_array = [];
+code_array.push(set_array)
+code_array.push(set_string)
+code_array.push(set_int)
+code_array.push(set_object)
+code_array.push(addition)
+code_array.push(subtraction)
+code_array.push(division);
+code_array.push(multiplication);
+code_array.push(compare)
+code_array.push(intstring)
+code_array.push(stringint)
+code_array.push(concat)
+code_array.push(goto)
+code_array.push(log)
+code_array.push(end)
+code_array.push(out)
 
-    };\
+var j, x, i; // shuffle
+for (i = code_array.length; i; i--) {
+    j = Math.floor(Math.random() * i);
+    x = code_array[i - 1];
+    code_array[i - 1] = code_array[j];
+    code_array[j] = x;
+}
 
-    }\
-
-    function decryptString() {\
+var machine_body = "(function () {\
+var %1=[],%2=[],%3=0,stop=false;\
+while (!stop) {\
+switch(%1[%2[%3++]]) {\
+%4\
+}\
+}\
+ function decryptString() {\
         var str = [];\
         while (true) {\
-            var code = CODE[COUNTER++];\
+            var code = %2[%3++];\
             if (!code) break;\
             str.push(code);\
         }\
         return str\
     }\
-
-    function decryptStringComp(ar) {\
+function decryptStringComp(ar) {\
         var str = [];\
         var i = 0;\
         while (true) {\
+var code = ar[i++];\
+if (!code) break;\
+str.push(String.fromCharCode(code));\
+}\
+return str.join(\"\");\
+}\
+})";
+var final = "";
+code_array.forEach(function (item) {
+    final += item + "\n";
 
-            var code = ar[i++];\
+})
 
-            if (!code) break;\
-            str.push(String.fromCharCode(code));\
-        }\
-        return str.join("");\
-    }\
-    })()\
-    "
-    */
+var final_machine = sprintf(machine_body, MEMORY, CODE, COUNTER, final)
+console.log(final_machine)
+    /*
+        var machine = "(function () {\
+        var %1 = [];\
+        var %2 = [];\
+        var %3 = 0;\
+        while (true) {\
+            switch (CODE[COUNTER++]) {\
+        case 1247: // get length\
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].length\
+            break;\
+        case 1248: // slice/substr\
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].slice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]])\ break;\
+        case 1249: // push\
+            MEMORY[CODE[COUNTER++]].push(MEMORY[CODE[COUNTER++]]);\
+            break;\
+        case 1250: // splice\
+            MEMORY[CODE[COUNTER++]].splice(MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]], MEMORY[CODE[COUNTER++]]);\
+            break;\
+        case 1251: // get\
+            MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]];\
+            break;\
+        case 1252: // set\
+            MEMORY[CODE[COUNTER++]][MEMORY[CODE[COUNTER++]]] = MEMORY[CODE[COUNTER++]];\
+            break;\
+
+            };\
+
+            }\
+
+            function decryptString() {\
+                var str = [];\
+                while (true) {\
+                    var code = CODE[COUNTER++];\
+                    if (!code) break;\
+                    str.push(code);\
+                }\
+                return str\
+            }\
+
+            function decryptStringComp(ar) {\
+                var str = [];\
+                var i = 0;\
+                while (true) {\
+
+                    var code = ar[i++];\
+
+                    if (!code) break;\
+                    str.push(String.fromCharCode(code));\
+                }\
+                return str.join("");\
+            }\
+            })()\
+            "
+            */
