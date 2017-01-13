@@ -30,6 +30,7 @@ var getRandom = function () {
 var MEMORY = generateVar();
 var CODE = generateVar();
 var COUNTER = generateVar();
+var OUT = generateVar();
 
 // set string
 
@@ -71,61 +72,43 @@ var division = sprintf("case %1:%2[%3[%4++]]=%2[%3[%4++]]/%2[%3[%4++]];break;", 
 var compare_code = getRandom();
 var compare = sprintf("case %1: var code=%3[%4++],a=MEMORY[CODE[COUNTER++]],b=%2[%3[%4++]],fal=%3[%4++],value=false;switch (code) {case 0: value = a == b;break;case 1: value = a > b; break;case 2: value = a >= b;break;case 3: value = a < b;break;case 4: value = a <= b;break;}if (!value) COUNTER = fal;", compare_code, MEMORY, CODE, COUNTER)
 
+// goto
+var goto_code = getRandom();
+var goto = sprintf("case %1: %2=%3[%2++]; break;", goto_code, COUNTER, CODE);
+
+// log
+var log_code = getRandom();
+var goto = sprintf("case %1: console.log(decryptStringComp(%2[%3[%4++]])); break;", log_code, MEMORY, CODE, COUNTER);
+
+// int to string
+var intstring_code = getRandom();
+var intstring = sprintf("case %1: var i=%2[%3[%4++]].toString(),s=[],j;for(j=0;j<i.length;++j) s.push(i.charCodeAt(j));%2[%3[%4++]]=st;break;", intstring_code, MEMORY, CODE, COUNTER);
+
+// string to int
+var stringint_code = getRandom();
+var stringint = sprintf("case %1: %2[%3[%4++]]=parseInt(%2[%3[%4++]]);break;", stringint_code, MEMORY, CODE, COUNTER)
+
+// concat
+var concat_code = getRandom()
+var concat = sprintf("case %1: %2[%3[%4++]]=%2[%3[%4++]].concat(%2[%3[%4++]])");
+
+// end
+
+var end_code = getRandom();
+var end = sprintf("case %1: stop=true;break;", end_code);
+
+// output 
+var out_code = getRandom();
+var out = sprintf("case %1: %2[%4[%5++]]=%3[%4[%5++]];break;", out_code, OUT, MEMORY, CODE, COUNTER);
+
+
+/*
 var machine = "(function () {\
 var %1 = [];\
 var %2 = [];\
 var %3 = 0;\
 while (true) {\
     switch (CODE[COUNTER++]) {\
-case 1241: // compare: \
-    var code = CODE[COUNTER++];\
-    var a = MEMORY[CODE[COUNTER++]];\
-    var b = MEMORY[CODE[COUNTER++]];\
-    var fal = CODE[COUNTER++];\
-    var value = false;\
-    switch (code) {\
-    case 0: // equal to\
-        value = a == b\
-        break;\
-    case 1: // bigger than\
-        value = a > b\
-        break;\
-    case 2: // bigger than or equal\
-        value = a >= b\
-        break;\
-    case 3: // smaller than\
-        value = a < b\
-        break;\
-    case 4: // smaller than or equal\
-        value = a <= b\
-        break;\
-    }\
-
-if (!value) COUNTER = fal;\
-break;\
-case 1242: // goto:\
-    COUNTER = CODE[COUNTER++];\
-    break;\
-case 1243: // console.log\
-    console.log(decryptStringComp(MEMORY[CODE[COUNTER++]]));\
-    break;\
-case 1244: // IntToString\
-    var integ = MEMORY[CODE[COUNTER++]].toString();\
-    var st = [];\
-    for (var i = 0; i < integ.length; ++i) {\
-        st.push(integ.charCodeAt(i));\
-    }\
-
-    MEMORY[CODE[COUNTER++]] = st;\
-    break;\
-case 1245: // end\
-
-    return;\
-    break;\
-case 1246: // concat string/array\
-    MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].concat(MEMORY[CODE[COUNTER++]])\
-
-    break;\
 case 1247: // get length\
     MEMORY[CODE[COUNTER++]] = MEMORY[CODE[COUNTER++]].length\
     break;\
@@ -172,3 +155,4 @@ case 1252: // set\
     }\
     })()\
     "
+    */
